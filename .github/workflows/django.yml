@@ -27,12 +27,6 @@ jobs:
           cat ~/.ssh/id_rsa
           chmod +x ~/.ssh/known_hosts
 
-      - name: Deploy with rsync
-        run: | 
-           pwd
-           mkdir aa
-           rsync -avz ${{ secrets.USERNAME }}@${{ secrets.HOST_DNS }}:/home/ubuntu/ci/
-
 
       - name: copying files
         uses: appleboy/ssh-action@master
