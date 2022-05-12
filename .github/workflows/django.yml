@@ -41,6 +41,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            git clone https://github.com/imJunaidAfzal/ci-cd-pipeline-django.git
-            cd ci-cd-pipeline-django
-            python manage.py runserver 0.0.0.0:8000
+            sudo usermod -aG docker ${USER}
+            su - ${USER}
+            docker-compose up -d --build
+            docker-compose up
+
+            
