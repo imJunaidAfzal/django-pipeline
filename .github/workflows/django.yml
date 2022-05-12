@@ -1,25 +1,42 @@
 name: Push-to-EC2
 
+# Trigger deployment only on push to master branch
 on:
   push:
-    branches: 
+    branches:
       - main
+      - develop
 
 jobs:
   deploy:
-    name: Push to EC2 Instance
+    name: Deploy to EC2 Instance
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
 
-      - name: Deploy to my EC2 instance
-#         uses: easingthemes/ssh-deploy@v2.1.5
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          SOURCE: "./"
-          REMOTE_HOST: ${{ secrects.HOST  }}
-          REMOTE_USER: ${{ secrets.USER }}
-          TARGET: "/home/"
+    steps:
+
+      - name: Deploy in EC2
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.EC2_SSH_KEY }}
+          known_hosts: unnecessary
+
+      - name: Adding Known Hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.HOST_DNS }}  >> ~/.ssh/known_hosts
+          cat ~/.ssh/id_rsa
+          chmod +x ~/.ssh/known_hosts
+
+
+      - name: copying files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            python3 -m venv env
+            source env/bin/activate
+            git clone https://github.com/imJunaidAfzal/ci-cd-pipeline-django.git
+            cd ci-cd-pipeline-django
+            python manage.py runserver 0.0.0.0:8000
