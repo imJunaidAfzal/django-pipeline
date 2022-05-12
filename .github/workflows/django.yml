@@ -22,11 +22,11 @@ jobs:
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   
-          - name: Build the Docker image
-            run: docker build . --file Dockerfile --tag junaidafzal2452/django
-          - name: docker push
-            run: |
-              docker push junaidafzal2452/django
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag junaidafzal2452/django
+      - name: docker push
+        run: |
+          docker push junaidafzal2452/django
 
       - name: Deploy in EC2
         uses: shimataro/ssh-key-action@v2
