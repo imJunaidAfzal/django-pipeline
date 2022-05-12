@@ -36,6 +36,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             pwd
+            sudo groupadd docker
             sudo usermod -aG docker ${USER}
             su - ${USER}
             docker-compose up -d --build
