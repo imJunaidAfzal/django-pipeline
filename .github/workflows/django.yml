@@ -14,6 +14,19 @@ jobs:
 
 
     steps:
+      - uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+  
+          - name: Build the Docker image
+            run: docker build . --file Dockerfile --tag junaidafzal2452/django
+          - name: docker push
+            run: |
+              docker push junaidafzal2452/django
 
       - name: Deploy in EC2
         uses: shimataro/ssh-key-action@v2
@@ -35,5 +48,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker-compose up -d --build
-            docker-compose up           
+            docker pull junaidafzal2452/django
+            docker-compose up
