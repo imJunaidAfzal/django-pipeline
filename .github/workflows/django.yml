@@ -35,7 +35,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            source env/bin/activate
             git clone https://github.com/imJunaidAfzal/ci-cd-pipeline-django.git
             cd ci-cd-pipeline-django
             python manage.py runserver 0.0.0.0:8000
