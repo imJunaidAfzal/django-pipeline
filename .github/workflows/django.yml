@@ -35,9 +35,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            pwd
             sudo usermod -aG docker ${USER}
             su - ${USER}
             docker-compose up -d --build
-            docker-compose up
-
-            
+            docker-compose up           
